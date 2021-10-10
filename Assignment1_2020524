@@ -1,1 +1,439 @@
 
+import java.util.*;
+
+public class cowin {
+    static  Hashtable<String,Integer> vaccines = new Hashtable<>();
+    static Hashtable<Integer, String> uniqueid_name = new Hashtable<Integer, String>();
+    static Hashtable<Integer,Integer> uniqueid_pincode= new Hashtable<>();
+    static Hashtable<Integer,Integer> dayno_quanity = new Hashtable<>();
+    static  Hashtable<Integer,String> dayno_vaccine = new Hashtable<>();
+    static Hashtable<Integer,Hashtable<Integer,String>> uniqueid_dayno_vaccine = new Hashtable<>();
+    static Hashtable<Integer,Hashtable<Integer,Integer>> uniqueid_dayno_quantity = new Hashtable<>();
+    static Hashtable<String,Integer> person_unique_id_status=new Hashtable<>();
+   static Dictionary uniqueid_registered = new Hashtable();
+    static Dictionary citizen_name_uniqueid = new Hashtable();
+    static  Scanner sc=new Scanner(System.in);
+
+
+
+    static class hospital{
+
+
+        Random rnd = new Random();
+
+
+
+
+        void add_vacine(){
+
+
+
+            System.out.print("Vaccine name");
+
+            String vacc_name=sc.next();
+            System.out.print("No. of doses");
+
+            int no_of_doses=sc.nextInt();
+            System.out.print("Gap between vaccines");
+            int gap_between_doses=sc.nextInt();
+
+            vaccines.put(vacc_name,no_of_doses);
+
+            System.out.print("Vaccine name:"+" "+vacc_name+" ,"+" No of doses: "+no_of_doses+" ,"+"gap between doses: "+gap_between_doses);
+
+
+
+
+
+        }
+
+        void register_hospital(){
+
+
+            int unique_id = rnd.nextInt(999999);
+            System.out.print("Enter hospital name");
+            String hospital_name=sc.next();
+
+
+            System.out.print("Enter pincode");
+            int pin_code=sc.nextInt();
+
+
+
+            uniqueid_name.put(unique_id,hospital_name);
+            uniqueid_pincode.put(unique_id,pin_code);
+            System.out.print(uniqueid_pincode);
+
+            System.out.print(hospital_name+"    "+pin_code+"   "+unique_id);
+
+
+
+        }
+
+        void create_slots(){
+
+            System.out.println("Enter the unique id");
+
+            long inp=sc.nextLong();
+            boolean visited=false;
+
+
+
+            Enumeration<Integer> e = uniqueid_name.keys();
+            Enumeration<String> cc = vaccines.keys();
+
+
+
+            while(e.hasMoreElements()){
+                int key=Integer.valueOf(e.nextElement());
+
+                System.out.print(key);
+
+                if(key==inp){
+                    visited=true;
+                }}
+
+            if (!visited){
+                System.out.println("Unique ID is not registered");
+            }
+            else{
+                System.out.print("Enter no. of slots");
+                int no_of_slots=sc.nextInt();
+
+                for(int i=0;i<no_of_slots;i++){
+                    System.out.println("Enter the day number ");
+                    int day_number=sc.nextInt();
+                    System.out.println("Enter the quantity ");
+                    int quantity=sc.nextInt();
+                    dayno_quanity.put(day_number,quantity);
+
+
+
+
+                    System.out.print("Select vaccine name");
+
+                    while(cc.hasMoreElements()){
+                        String key=String.valueOf(cc.nextElement());
+                        System.out.println(key+" ");
+                    }
+
+                    String regist_vaccine=sc.next();
+
+
+                    dayno_vaccine.put(day_number,regist_vaccine);
+
+
+                    uniqueid_dayno_vaccine.put((int) inp,dayno_vaccine);
+                    uniqueid_dayno_quantity.put((int) inp,dayno_quanity);
+
+
+
+
+                }
+
+                System.out.print(dayno_quanity);
+                System.out.print(dayno_vaccine);
+
+                System.out.print(uniqueid_dayno_vaccine);
+                System.out.print(uniqueid_dayno_quantity);
+
+
+
+            }
+
+
+
+
+        }
+
+
+    }
+
+    static class slots extends hospital{
+
+
+
+
+        public void list_of_all_slot_with_hospotal(){
+            int give_id_hospital=sc.nextInt();
+            Enumeration<Integer> un = uniqueid_dayno_vaccine.keys();
+            Enumeration<Integer> unn = uniqueid_dayno_quantity.keys();
+            while(un.hasMoreElements()){
+                int key=Integer.valueOf(un.nextElement());
+                if(give_id_hospital==key){
+                    System.out.println("{day=vaccine}"+uniqueid_dayno_vaccine.get(key));
+                    System.out.println("{day=quantity of vaccine }"+uniqueid_dayno_quantity.get(key));
+                }
+            }
+
+
+        }
+
+
+
+    }
+
+    static class check_vaccine_status{
+        public void vaccination_status(){
+            String pat_id=sc.next();
+
+            if(person_unique_id_status.get(pat_id)==0){
+                System.out.println("You are vaccinated");
+            }
+            else if(person_unique_id_status.get(pat_id)>0){
+                System.out.println("You are Partially vaccinated");
+             }
+            else{
+                System.out.println("You are not vaccinated");
+            }
+        }
+    }
+
+    static class citizens extends hospital{
+
+        Scanner sc=new Scanner(System.in);
+        String name;
+        int age;
+        String uniqueid;
+        boolean registered=false;
+
+
+        void register_citizen(){
+            System.out.println("Enter your name");
+            name=sc.nextLine();
+            System.out.println("Enter your age");
+            age=sc.nextInt();
+            System.out.println("Enter your 12 digit unique code");
+            uniqueid=sc.next();
+
+            if (age>=18){
+                if(uniqueid.length()==12){
+                    registered=true;
+
+                    uniqueid_registered.put(uniqueid,registered);
+                    citizen_name_uniqueid.put(name,uniqueid);
+                    System.out.println(name+ " "+age+"  "+uniqueid+"Registered successfully");
+
+                }
+            }
+            else{
+                System.out.println("you are under 18");
+            }
+        }
+
+
+
+        public void book_a_slot(){
+
+            System.out.println("Enter your unique id");
+            String inp=sc.next();
+            boolean visited=false;
+            int select_pincode;
+            int dose_number=-1;
+            Enumeration<Integer> un = uniqueid_registered.keys();
+
+            Enumeration<Integer> gg=uniqueid_pincode.keys();
+            Enumeration<Integer> gcc=uniqueid_dayno_quantity.keys();
+            Enumeration<Integer> bcc=uniqueid_dayno_vaccine.keys();
+
+            while(un.hasMoreElements()){
+                String key=String.valueOf(un.nextElement());
+
+                if(key.equals(inp)){
+
+                    visited=true;
+                }
+            }
+
+
+            if(visited){
+                System.out.println("""
+                        1. Search area
+                        2. Search by vaccine
+                        3. Exit
+                        """);
+
+                int option=sc.nextInt();
+
+                if(option==1){
+                    select_pincode=sc.nextInt();
+                    while(gg.hasMoreElements()){
+                        int key=Integer.valueOf(gg.nextElement());
+                        int check=(int) uniqueid_pincode.get(key);
+                        if(select_pincode==check){
+                            System.out.println(key+" "+uniqueid_name.get(key));
+
+                        }
+                    }
+                    int get_hospital_id=sc.nextInt();
+
+                    System.out.println("Slots->Quantity"+uniqueid_dayno_quantity.get(get_hospital_id));
+                    System.out.println("Slots->Vaccine"+uniqueid_dayno_vaccine.get(get_hospital_id));
+
+                    int slot_book=sc.nextInt();
+
+
+
+                    while(gcc.hasMoreElements()){
+                        int key=Integer.valueOf(gcc.nextElement());
+                        int value= uniqueid_dayno_quantity.get(key).get(slot_book);
+                        if(key==get_hospital_id){
+
+                                uniqueid_dayno_quantity.get(key).put(slot_book,value-1);
+                                System.out.print(citizen_name_uniqueid+" vaccinated with "+uniqueid_dayno_vaccine.get(get_hospital_id).get(slot_book));
+
+
+
+                        }
+                    }
+                    person_unique_id_status.put(inp, vaccines.get(uniqueid_dayno_vaccine.get(get_hospital_id).get(slot_book))+dose_number);
+
+
+
+
+                }
+                if(option==2){
+                    String enter_vaccine_name=sc.next();
+
+
+
+                    while(bcc.hasMoreElements()){
+
+                        int key=Integer.valueOf(bcc.nextElement());
+                        for(String e:uniqueid_dayno_vaccine.get(key).values()){
+                            if(e.equals(enter_vaccine_name)){
+                                System.out.println(key+" "+uniqueid_name.get(key));
+                            }
+                        }
+
+                    }
+
+
+
+                    int give_id=sc.nextInt();
+
+
+                    while(bcc.hasMoreElements()){
+                        int key=Integer.valueOf(bcc.nextElement());
+                        if(key==give_id){
+                            for(int a:uniqueid_dayno_vaccine.get(key).keySet()){
+                                if(uniqueid_dayno_vaccine.get(key).get(a).equals(enter_vaccine_name)){
+                                    System.out.println("Slots"+a+" Quanity "+uniqueid_dayno_quantity.get(key).get(a)+"  Vaccine: "+enter_vaccine_name);
+                                    break;
+
+                                }
+
+
+                            }
+                        }
+
+
+                    }
+
+
+
+                    int give_slot=sc.nextInt();
+
+                    while(gcc.hasMoreElements()){
+                        int key=Integer.valueOf(gcc.nextElement());
+                        int value= uniqueid_dayno_quantity.get(key).get(give_slot);
+                        if(key==give_id){
+//
+                                uniqueid_dayno_quantity.get(key).put(give_slot,value-1);
+                                System.out.print(name+" vaccinated with "+uniqueid_dayno_vaccine.get(give_id).get(give_slot));
+
+
+//                            }
+
+                        }
+
+
+
+                    }
+                    dose_number=vaccines.get(uniqueid_dayno_vaccine.get(give_id).get(give_slot));
+
+                    person_unique_id_status.put(inp, dose_number--);
+
+
+                    }
+
+                }
+
+
+                }
+
+
+
+    }
+
+
+
+public static void booking(){
+    citizens cc=new citizens();
+
+        cc.book_a_slot();
+
+}
+    public static void main(String[] args) {
+        System.out.println("""
+
+
+                        CoWin Portal initialized....
+                ------------------------------------
+                1. Add Vaccine
+                2. Register Hospital
+                3. Register Citizen
+                4. Add Slot for Vaccination
+                5. Book Slot for Vaccination
+                6. List all slots for a hospital
+                7. Check Vaccination Status
+                8. Exit
+                ------------------------------------"""
+
+        );
+
+
+
+
+        while (true) {
+            int x = sc.nextInt();
+            if (x == 1) {
+                hospital hh = new hospital();
+                hh.add_vacine();
+            }
+            if (x == 2) {
+                hospital hh = new hospital();
+                hh.register_hospital();
+            }
+            if (x == 3) {
+                citizens cc = new citizens();
+                cc.register_citizen();
+
+            }
+            if (x == 4) {
+                hospital hh = new hospital();
+                hh.create_slots();
+            }
+            if (x == 5) {
+                booking();
+            }
+            if (x == 6) {
+                slots ss = new slots();
+                ss.list_of_all_slot_with_hospotal();
+
+            }
+            if (x == 7) {
+                check_vaccine_status ch = new check_vaccine_status();
+                ch.vaccination_status();
+            }
+            if (x == 8) {
+                break;
+            }
+        }
+
+
+    }}
+
+
+
+
